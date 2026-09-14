@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: upd-los-santos-bot
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20.19.0
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: CLIENT_ID
+        sync: false
+      - key: GUILD_ID
+        sync: false
+      - key: TIMEZONE
+        value: Asia/Ho_Chi_Minh
+      - key: BRAND_NAME
+        value: UPD Los Santos
+      - key: BRAND_COLOR
+        value: 1E90FF
+
