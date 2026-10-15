@@ -254,10 +254,20 @@ async function handleCommand(interaction, data) {
   if (commandName === 'scan_server') {
     if (!interaction.member.permissions.has(P.ManageGuild)) return reply(interaction, { embeds: [errorEmbed('Bạn cần quyền **Manage Server** để xuất cấu trúc server.')] });
     const { files, summary } = await generateServerReports(guild, interaction.user);
-    return interaction.editReply({
-      embeds: [successEmbed(`Đã quét **${summary.roles} role**, **${summary.categories} category**, **${summary.textChannels} kênh chat** và **${summary.voiceChannels} kênh voice/stage**.\n\nFile **Markdown** dùng để gửi người khác xem; file **JSON** giữ cấu hình chi tiết để đối chiếu hoặc dựng lại server. Hãy chỉ chia sẻ với người bạn tin tưởng vì báo cáo có ID và permission của các kênh riêng tư.`)],
+    const description = `Đã quét **${summary.roles} role**, **${summary.categories} category**, **${summary.textChannels} kênh chat** và **${summary.voiceChannels} kênh voice/stage**.\n\nFile **Markdown** dùng để gửi người khác xem; file **JSON** giữ cấu hình chi tiết để đối chiếu hoặc dựng lại server. Hãy chỉ chia sẻ với người bạn tin tưởng vì báo cáo có ID và permission của các kênh riêng tư.`;
+    const message = await interaction.editReply({
+      embeds: [successEmbed(description)],
       files
     });
+    const downloadLinks = [...message.attachments.values()]
+      .map(attachment => `[📥 Tải ${attachment.name}](${attachment.url})`)
+      .join('\n');
+    if (downloadLinks) {
+      await interaction.editReply({
+        embeds: [successEmbed(`${description}\n\n**Link tải trực tiếp:**\n${downloadLinks}`)]
+      });
+    }
+    return;
   }
 
   if (commandName === 'setup') {

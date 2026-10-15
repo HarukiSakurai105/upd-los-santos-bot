@@ -141,6 +141,7 @@ Filesystem Free là tạm thời. Hãy backup `data/guilds.json`; bot chỉ tự
 - Từ v1.4.2, thêm Internal Affairs Division, Ministry of Interior Police, FTI, FTO và đổi SASPR Game Warden thành Forest Ranger Station Chief.
 - Từ v1.4.3, toàn bộ role được nhóm và xếp lại từ cao xuống thấp: quản trị cấp cao → Bộ Chỉ Huy/FTI/FTO → từng hệ thống rank LSPD/BCSO/SASP/SASPR → rank UPD/FIB/NOOSE/DOC → role nghiệp vụ và thành viên.
 - Từ v1.5.0, `/scan_server` xuất đồng thời báo cáo Markdown dễ gửi và JSON chi tiết của toàn bộ role, category, kênh chat/voice cùng permission overwrite; báo cáo không đọc nội dung tin nhắn hay token bot.
+- Từ v1.5.1, kết quả `/scan_server` có link tải trực tiếp cho từng báo cáo, tránh lỗi Discord chỉ hiện khung xem trước màu xám/đen.
 - Không cấp `Administrator` cho role nhân sự thông thường. Mẫu chỉ cấp quyền này cho `Chủ Cộng Đồng`.
 - Quyền slash command có thể tinh chỉnh tại **Server Settings → Integrations → bot → Commands**.
 - Bot chưa kết nối FiveM/txAdmin hoặc database nhân vật vì mỗi server dùng framework/API khác nhau. Phần Discord hoạt động độc lập hoàn chỉnh.
