@@ -13,6 +13,7 @@ import path from 'node:path';
 import { config } from './config.js';
 import { baseEmbed, errorEmbed, successEmbed } from './embeds.js';
 import { getGuildData, updateGuildData } from './storage.js';
+import { generateServerReports } from './server-report.js';
 import { departmentKeys, departmentRankGroup, rankGroups, rankKeys, updManagementRoleKeys } from './template.js';
 import { deleteAllCustomRoles, deleteAllGuildChannels, deleteUnexpectedRoles, repostPanels, setupGuild } from './setup.js';
 
@@ -250,6 +251,15 @@ function ticketModal(type) {
 async function handleCommand(interaction, data) {
   const { commandName, guild } = interaction;
 
+  if (commandName === 'scan_server') {
+    if (!interaction.member.permissions.has(P.ManageGuild)) return reply(interaction, { embeds: [errorEmbed('Bạn cần quyền **Manage Server** để xuất cấu trúc server.')] });
+    const { files, summary } = await generateServerReports(guild, interaction.user);
+    return interaction.editReply({
+      embeds: [successEmbed(`Đã quét **${summary.roles} role**, **${summary.categories} category**, **${summary.textChannels} kênh chat** và **${summary.voiceChannels} kênh voice/stage**.\n\nFile **Markdown** dùng để gửi người khác xem; file **JSON** giữ cấu hình chi tiết để đối chiếu hoặc dựng lại server. Hãy chỉ chia sẻ với người bạn tin tưởng vì báo cáo có ID và permission của các kênh riêng tư.`)],
+      files
+    });
+  }
+
   if (commandName === 'setup') {
     const mode = option(interaction, 'chế_độ');
     const logo = interaction.options.getAttachment('logo_server');
@@ -450,7 +460,7 @@ async function handleCommand(interaction, data) {
   }
 
   if (commandName === 'help') {
-    return reply(interaction, { embeds: [baseEmbed('🤖 TRỢ GIÚP BOT UPD', '**Thành viên**\n`/server` `/duty` `/help`\n\n**Quản trị**\n`/announce` `/nickname` `/clear` `/warn` `/warnings` `/unwarn` `/timeout` `/untimeout` `/kick` `/ban`\n\n**UPD**\n`/rank lspd|bcso|sasp|saspr|upd` — cấp/đổi cấp bậc theo cơ quan\n`/department` — phân công LSPD/BCSO/SASP/SASPR/FIB/NOOSE/DOC\n\n**Chủ server**\n`/setup` — setup/full reset\n`/cleanup_roles` — xóa role cũ còn sót\n`/panel` — đăng lại các bảng điều khiển')] });
+    return reply(interaction, { embeds: [baseEmbed('🤖 TRỢ GIÚP BOT UPD', '**Thành viên**\n`/server` `/duty` `/help`\n\n**Quản trị**\n`/scan_server` — xuất role, kênh chat/voice và permission ra MD + JSON\n`/announce` `/nickname` `/clear` `/warn` `/warnings` `/unwarn` `/timeout` `/untimeout` `/kick` `/ban`\n\n**UPD**\n`/rank lspd|bcso|sasp|saspr|upd` — cấp/đổi cấp bậc theo cơ quan\n`/department` — phân công LSPD/BCSO/SASP/SASPR/FIB/NOOSE/DOC\n\n**Chủ server**\n`/setup` — setup/full reset\n`/cleanup_roles` — xóa role cũ còn sót\n`/panel` — đăng lại các bảng điều khiển')] });
   }
 }
 

@@ -27,6 +27,7 @@ export const commandData = [
       { name: 'ĐỒNG Ý XÓA ROLE CŨ', value: 'yes' }
     )).setDefaultMemberPermissions(P.Administrator),
   new SlashCommandBuilder().setName('panel').setDescription('Đăng lại các bảng điều khiển').setDefaultMemberPermissions(P.ManageGuild),
+  new SlashCommandBuilder().setName('scan_server').setDescription('Quét role, kênh chat/voice và xuất báo cáo MD + JSON').setDefaultMemberPermissions(P.ManageGuild),
   new SlashCommandBuilder().setName('announce').setDescription('Gửi thông báo chính thức').addStringOption(o => o.setName('nội_dung').setDescription('Nội dung thông báo').setRequired(true)).addChannelOption(o => o.setName('kênh').setDescription('Kênh nhận thông báo')).setDefaultMemberPermissions(P.ManageMessages),
   rankCommand,
   new SlashCommandBuilder().setName('department').setDescription('Phân công thành viên vào cơ quan thực thi pháp luật')

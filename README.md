@@ -84,6 +84,7 @@ Khi terminal báo bot online và đã đăng ký slash command:
 | `/setup` | Bổ sung hoặc reset toàn bộ kênh, đổi tên và ảnh server | Administrator |
 | `/cleanup_roles` | Xóa role cũ còn sót, giữ role UPD hiện tại | Chủ server |
 | `/panel` | Đăng lại bảng luật/ticket/ứng tuyển | Manage Server |
+| `/scan_server` | Quét role, category, kênh chat/voice và permission; xuất file Markdown + JSON | Manage Server |
 | `/announce` | Gửi embed thông báo | Manage Messages |
 | `/rank lspd/bcso/sasp/saspr/upd` | Cấp/đổi cấp bậc đúng cấu trúc từng cơ quan | Chỉ huy cơ quan, Bộ Chỉ Huy hoặc Manage Roles |
 | `/department` | Phân công hoặc gỡ cơ quan LSPD/BCSO/SASP/SASPR/FIB/NOOSE/DOC | Bộ Chỉ Huy hoặc Manage Roles |
@@ -139,6 +140,7 @@ Filesystem Free là tạm thời. Hãy backup `data/guilds.json`; bot chỉ tự
 - Từ v1.4.1, role dùng API `colors` mới của discord.js; nếu Discord từ chối xếp 69 role cùng lúc, bot tự chia thành nhóm nhỏ và vẫn tiếp tục setup thay vì báo lỗi 50013 rồi dừng.
 - Từ v1.4.2, thêm Internal Affairs Division, Ministry of Interior Police, FTI, FTO và đổi SASPR Game Warden thành Forest Ranger Station Chief.
 - Từ v1.4.3, toàn bộ role được nhóm và xếp lại từ cao xuống thấp: quản trị cấp cao → Bộ Chỉ Huy/FTI/FTO → từng hệ thống rank LSPD/BCSO/SASP/SASPR → rank UPD/FIB/NOOSE/DOC → role nghiệp vụ và thành viên.
+- Từ v1.5.0, `/scan_server` xuất đồng thời báo cáo Markdown dễ gửi và JSON chi tiết của toàn bộ role, category, kênh chat/voice cùng permission overwrite; báo cáo không đọc nội dung tin nhắn hay token bot.
 - Không cấp `Administrator` cho role nhân sự thông thường. Mẫu chỉ cấp quyền này cho `Chủ Cộng Đồng`.
 - Quyền slash command có thể tinh chỉnh tại **Server Settings → Integrations → bot → Commands**.
 - Bot chưa kết nối FiveM/txAdmin hoặc database nhân vật vì mỗi server dùng framework/API khác nhau. Phần Discord hoạt động độc lập hoàn chỉnh.
