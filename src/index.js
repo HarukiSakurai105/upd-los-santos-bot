@@ -18,7 +18,7 @@ const health = {
   startedAt: new Date().toISOString(),
   discordReady: false,
   botTag: null,
-  guildId: config.guildId
+  guildCount: 0
 };
 
 const port = Number(process.env.PORT || 3000);
@@ -42,32 +42,56 @@ const client = new Client({
   ]
 });
 
+const rest = new REST({ version: '10' }).setToken(config.token);
+
+async function registerCommandsForGuild(guild) {
+  await rest.put(Routes.applicationGuildCommands(config.clientId, guild.id), { body: commandData });
+  console.log(`✅ Đã đăng ký ${commandData.length} slash command cho ${guild.name} (${guild.id})`);
+}
+
+async function recoverOneGuild(guild) {
+  const recovery = await recoverGuildState(guild);
+  if (recovery.recovered) console.log(`✅ ${guild.name}: đồng bộ ${recovery.roles} role và ${recovery.channels} kênh`);
+  else console.warn(`⚠️ ${guild.name}: chưa setup hoặc thiếu ${recovery.missingRoles.length} role và ${recovery.missingChannels.length} kênh; hãy chạy /setup.`);
+  await restorePendingTicketDeletions(guild);
+}
+
+async function prepareGuild(guild) {
+  try {
+    await registerCommandsForGuild(guild);
+  } catch (error) {
+    console.error(`Không thể đăng ký slash commands cho ${guild.name} (${guild.id}):`, error);
+  }
+  try {
+    await recoverOneGuild(guild);
+  } catch (error) {
+    console.error(`Không thể khôi phục cấu hình ${guild.name} (${guild.id}):`, error);
+  }
+}
+
 client.once(Events.ClientReady, async readyClient => {
   console.log(`✅ Bot online: ${readyClient.user.tag}`);
   health.discordReady = true;
   health.botTag = readyClient.user.tag;
+  health.guildCount = readyClient.guilds.cache.size;
   readyClient.user.setPresence({
     activities: [{ name: `${config.brandName} • /help`, type: ActivityType.Watching }],
     status: 'online'
   });
-  try {
-    const rest = new REST({ version: '10' }).setToken(config.token);
-    await rest.put(Routes.applicationGuildCommands(config.clientId, config.guildId), { body: commandData });
-    console.log(`✅ Đã đăng ký ${commandData.length} slash command cho server ${config.guildId}`);
-  } catch (error) {
-    console.error('Không thể đăng ký slash commands:', error);
-  }
-  try {
-    const guild = await readyClient.guilds.fetch(config.guildId);
-    const recovery = await recoverGuildState(guild);
-    if (recovery.recovered) console.log(`✅ Đã đồng bộ ${recovery.roles} role và ${recovery.channels} kênh từ Discord`);
-    else console.warn(`⚠️ Không thể tự khôi phục đầy đủ. Thiếu ${recovery.missingRoles.length} role và ${recovery.missingChannels.length} kênh; hãy chạy /setup.`);
-    await restorePendingTicketDeletions(guild);
-  } catch (error) {
-    console.error('Không thể tự khôi phục cấu hình server:', error);
-  }
+  const guilds = [...readyClient.guilds.cache.values()];
+  console.log(`✅ Bot đang phục vụ ${guilds.length} server`);
+  for (const guild of guilds) await prepareGuild(guild);
 });
 
+client.on(Events.GuildCreate, async guild => {
+  health.guildCount = client.guilds.cache.size;
+  console.log(`➕ Bot vừa tham gia ${guild.name} (${guild.id})`);
+  await prepareGuild(guild);
+});
+client.on(Events.GuildDelete, guild => {
+  health.guildCount = client.guilds.cache.size;
+  console.log(`➖ Bot đã rời ${guild.name} (${guild.id})`);
+});
 client.on(Events.InteractionCreate, handleInteraction);
 client.on(Events.GuildMemberAdd, sendWelcome);
 client.on(Events.GuildMemberRemove, sendLeave);

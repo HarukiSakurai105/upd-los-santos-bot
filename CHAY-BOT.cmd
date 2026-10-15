@@ -30,7 +30,7 @@ if errorlevel 1 (
 if not exist ".env" (
   echo [CAN CAU HINH] Chua co file .env.
   copy /y ".env.example" ".env" >nul
-  echo Da tao .env tu file mau. Hay dien DISCORD_TOKEN, CLIENT_ID va GUILD_ID.
+  echo Da tao .env tu file mau. Hay dien DISCORD_TOKEN va CLIENT_ID.
   echo Notepad se duoc mo de ban dien thong tin.
   start "" notepad ".env"
   echo.

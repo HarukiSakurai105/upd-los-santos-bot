@@ -46,13 +46,12 @@ Mở `.env` rồi điền:
 ```env
 DISCORD_TOKEN=token_cua_bot
 CLIENT_ID=application_id
-GUILD_ID=id_server
 TIMEZONE=Asia/Ho_Chi_Minh
 BRAND_NAME=UPD Los Santos
 BRAND_COLOR=1E90FF
 ```
 
-Để lấy ID: bật **Developer Mode** trong Discord → nhấp phải server → **Copy Server ID**. `CLIENT_ID` là **Application ID** trong trang General Information của ứng dụng.
+`CLIENT_ID` là **Application ID** trong trang General Information của ứng dụng. Bot không cần `GUILD_ID`: mỗi lần khởi động, bot tự đăng ký lệnh cho toàn bộ server đang tham gia và tự xử lý server mới được mời vào.
 
 ## 3. Chạy và setup server
 
@@ -64,7 +63,7 @@ npm start
 
 Nhấp đúp file `CHAY-BOT.cmd`. File sẽ tự chuyển tới đúng thư mục bot, kiểm tra Node.js/npm, tự chạy `npm install` nếu thiếu thư viện rồi khởi động bot. Không đóng cửa sổ CMD khi muốn bot tiếp tục online; nhấn `Ctrl+C` để dừng.
 
-Nếu chưa có `.env`, file CMD sẽ tự sao chép `.env.example` thành `.env` và mở Notepad để bạn điền `DISCORD_TOKEN`, `CLIENT_ID`, `GUILD_ID`. Sau khi lưu, nhấp đúp `CHAY-BOT.cmd` lần nữa.
+Nếu chưa có `.env`, file CMD sẽ tự sao chép `.env.example` thành `.env` và mở Notepad để bạn điền `DISCORD_TOKEN`, `CLIENT_ID`. Sau khi lưu, nhấp đúp `CHAY-BOT.cmd` lần nữa.
 
 Khi terminal báo bot online và đã đăng ký slash command:
 
@@ -113,7 +112,7 @@ Bản này có sẵn HTTP health server tại `/health` và `render.yaml`, khôn
 
 1. Đưa mã nguồn lên một GitHub repository riêng tư. Không đưa file `.env` lên GitHub.
 2. Trên Render chọn **New → Blueprint** và kết nối repository. Render sẽ đọc `render.yaml` để tạo Free Web Service.
-3. Điền ba biến bí mật khi Render yêu cầu: `DISCORD_TOKEN`, `CLIENT_ID`, `GUILD_ID`.
+3. Điền hai biến bí mật khi Render yêu cầu: `DISCORD_TOKEN`, `CLIENT_ID`.
 4. Khi deploy hoàn tất, mở `https://TEN-DICH-VU.onrender.com/health`. Kết quả cần có `"ok":true` và `"discordReady":true`.
 5. Tạo tài khoản UptimeRobot, chọn **Add New Monitor → HTTP(s)**, nhập URL `/health` phía trên và để chu kỳ 5 phút.
 
@@ -142,6 +141,7 @@ Filesystem Free là tạm thời. Hãy backup `data/guilds.json`; bot chỉ tự
 - Từ v1.4.3, toàn bộ role được nhóm và xếp lại từ cao xuống thấp: quản trị cấp cao → Bộ Chỉ Huy/FTI/FTO → từng hệ thống rank LSPD/BCSO/SASP/SASPR → rank UPD/FIB/NOOSE/DOC → role nghiệp vụ và thành viên.
 - Từ v1.5.0, `/scan_server` xuất đồng thời báo cáo Markdown dễ gửi và JSON chi tiết của toàn bộ role, category, kênh chat/voice cùng permission overwrite; báo cáo không đọc nội dung tin nhắn hay token bot.
 - Từ v1.5.1, kết quả `/scan_server` có link tải trực tiếp cho từng báo cáo, tránh lỗi Discord chỉ hiện khung xem trước màu xám/đen.
+- Từ v1.6.0, bot hoạt động đa server mà không cần `GUILD_ID`: tự đăng ký toàn bộ slash command cho mọi server hiện có và server mới được mời vào; dữ liệu setup vẫn tách riêng theo từng server.
 - Không cấp `Administrator` cho role nhân sự thông thường. Mẫu chỉ cấp quyền này cho `Chủ Cộng Đồng`.
 - Quyền slash command có thể tinh chỉnh tại **Server Settings → Integrations → bot → Commands**.
 - Bot chưa kết nối FiveM/txAdmin hoặc database nhân vật vì mỗi server dùng framework/API khác nhau. Phần Discord hoạt động độc lập hoàn chỉnh.

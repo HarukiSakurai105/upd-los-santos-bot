@@ -14,12 +14,9 @@ services:
         sync: false
       - key: CLIENT_ID
         sync: false
-      - key: GUILD_ID
-        sync: false
       - key: TIMEZONE
         value: Asia/Ho_Chi_Minh
       - key: BRAND_NAME
         value: UPD Los Santos
       - key: BRAND_COLOR
         value: 1E90FF
-
